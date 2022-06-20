@@ -101,8 +101,8 @@ const getFaces = (text, name, texValues, normalValues) => {
   const facesText = faces.join(", ");
   console.table(normals);
   return `
-  int ${name}indexCount = ${indexCount};
-  float ${name}Indexes[] = {
+  unsigned int ${name}indexCount = ${indexCount};
+  int ${name}Indexes[] = {
     ${facesText},
   };
   float ${name}VertexNormals[] = {
