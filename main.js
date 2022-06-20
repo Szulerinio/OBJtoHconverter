@@ -81,7 +81,7 @@ const getFaces = (text, name, texValues, normalValues) => {
     .trim()
     .split(" ");
 
-  const faces = dataArray.map((el) => el.split("/")[0]);
+  const faces = dataArray.map((el) => el.split("/")[0] - 1 + "");
   const texIndexes = dataArray.map((el) => el.split("/")[1]);
   const normalIndexes = dataArray.map((el) => el.split("/")[2]);
   const texes = texIndexes.map(
