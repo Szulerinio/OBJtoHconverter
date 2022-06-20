@@ -55,8 +55,13 @@ const parse = (text, name) => {
 };
 
 const getVerts = (text, name) => {
-  const dataArray = text
-    .slice(text.indexOf("v "), text.indexOf("vt "))
+  const dataLeftTrim = text.slice(text.indexOf("v "));
+  const data2 = dataLeftTrim.slice(
+    0,
+    dataLeftTrim.search(/[^v \d\r\n,.\-]|v(?! )/i)
+  );
+
+  const dataArray = data2
     .replace(/\r\n/g, " ")
     .replace(/\n/g, " ")
     .replace(/v/g, "1.0")
@@ -73,8 +78,13 @@ const getVerts = (text, name) => {
 };
 
 const getFaces = (text, name, texValues, normalValues) => {
-  const dataArray = text
-    .slice(text.indexOf("f "))
+  const dataLeftTrim = text.slice(text.indexOf("f "));
+  const data2 = dataLeftTrim.slice(
+    0,
+    dataLeftTrim.search(/[^f \d\r\n,./\-]|f(?! )/i)
+  );
+
+  const dataArray = data2
     .replace(/\r\n/g, "")
     .replace(/\n/g, "")
     .replace(/f/g, "")
@@ -115,19 +125,36 @@ const getFaces = (text, name, texValues, normalValues) => {
 };
 
 const getTex = (text) => {
-  const data = text
-    .slice(text.indexOf("vt "), text.indexOf("vn "))
+  const dataLeftTrim = text.slice(text.indexOf("vt "));
+  const data2 = dataLeftTrim.slice(
+    0,
+    dataLeftTrim.search(/[^vt \d\r\n,.\-]|v(?!t)/i)
+  );
+  const data = data2
     .replace(/\r\n/g, "")
     .replace(/\n/g, "")
     .replace(/vt/g, "")
     .trim()
     .split(" ");
+  console.log(data2);
   return data;
 };
 
+// const getTex = (text) => {
+//   const data = text
+//     .slice(text.indexOf("vt "), text.indexOf("vn "))
+//     .replace(/\r\n/g, "")
+//     .replace(/\n/g, "")
+//     .replace(/vt/g, "")
+//     .trim()
+//     .split(" ");
+//   return data;
+// };
+
 const getVertexNormals = (text) => {
-  const dataArray = text
-    .slice(text.indexOf("vn "), text.indexOf("usemtl"))
+  const dataLeftTrim = text.slice(text.indexOf("vn "));
+  const dataArray = dataLeftTrim
+    .slice(0, dataLeftTrim.search(/[^vn \d\r\n,.\-]|v(?!n)/i))
     .replace(/\r\n/g, " ")
     .replace(/\n/g, " ")
     .replace(/vn/g, "0.0")
@@ -137,6 +164,19 @@ const getVertexNormals = (text) => {
   data.push("0.0");
   return data;
 };
+
+// const getVertexNormals = (text) => {
+//   const dataArray = text
+//     .slice(text.indexOf("vn "), text.indexOf("usemtl"))
+//     .replace(/\r\n/g, " ")
+//     .replace(/\n/g, " ")
+//     .replace(/vn/g, "0.0")
+//     .trim()
+//     .split(" ");
+//   const data = dataArray.slice(1);
+//   data.push("0.0");
+//   return data;
+// };
 
 button.addEventListener("click", (e) => {
   getTheFile();
