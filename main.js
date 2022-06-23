@@ -48,10 +48,8 @@ const parse = (text, name) => {
 
   const texValues = getTex(text);
   const normalValues = getVertexNormals(text);
-  const faces = getFaces(text, name, texValues, normalValues);
-  const final = `${verts}
-  ${faces} `;
-  current_blob = final;
+  const faces = getFaces(text, name, texValues, normalValues, verts);
+  current_blob = faces;
 };
 
 const getVerts = (text, name) => {
@@ -67,17 +65,12 @@ const getVerts = (text, name) => {
     .replace(/v/g, "1.0")
     .trim()
     .split(" ");
-  const vertsCount = dataArray.length / 4;
-  const data = dataArray.slice(1).join("f, ");
-
-  return `
-  int ${name}VertexCount = ${vertsCount};
-  float ${name}Vertices[] = {
-    ${data}f, 1.0f,
-  };`;
+  dataArray.push("1.0");
+  const data = dataArray.slice(1);
+  return data;
 };
 
-const getFaces = (text, name, texValues, normalValues) => {
+const getFaces = (text, name, texValues, normalValues, vertValues) => {
   const dataLeftTrim = text.slice(text.indexOf("f "));
   const data2 = dataLeftTrim.slice(
     0,
@@ -91,9 +84,16 @@ const getFaces = (text, name, texValues, normalValues) => {
     .trim()
     .split(" ");
 
-  const faces = dataArray.map((el) => el.split("/")[0] - 1 + "");
+  const faceIndexes = dataArray.map((el) => el.split("/")[0]);
   const texIndexes = dataArray.map((el) => el.split("/")[1]);
   const normalIndexes = dataArray.map((el) => el.split("/")[2]);
+
+  const verts = faceIndexes.map(
+    (el) =>
+      `${vertValues[(el - 1) * 4]}f, ${vertValues[(el - 1) * 4 + 1]}f, ${
+        vertValues[(el - 1) * 4 + 2]
+      }f, ${vertValues[(el - 1) * 4 + 3]}f,`
+  );
   const texes = texIndexes.map(
     (el) => `${texValues[(el - 1) * 2]}f, ${texValues[(el - 1) * 2 + 1]}f,`
   );
@@ -106,14 +106,14 @@ const getFaces = (text, name, texValues, normalValues) => {
 
   console.log(dataArray);
   const indexCount = dataArray.length;
+  const vertsText = verts.join("\n");
   const texesText = texes.join("\n");
   const normalsText = normals.join("\n");
-  const facesText = faces.join(", ");
   console.table(normals);
   return `
-  unsigned int ${name}indexCount = ${indexCount};
-  int ${name}Indexes[] = {
-    ${facesText},
+  unsigned int ${name}VertexCount = ${indexCount};
+  float ${name}Vertices[] = {
+    ${vertsText}
   };
   float ${name}VertexNormals[] = {
     ${normalsText}
