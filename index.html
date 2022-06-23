@@ -9,17 +9,17 @@
   </head>
   <body>
     <button id="button">Upload .OBJ</button>
+    <span id="status"></span>
     <button id="saveButton">Downnload .OBJ</button>
     <div>
       <p>#include "[filename].h" // import</p>
-      <p>float* vertices = [filename]Vertices;</p>
-      <p>float* normals = [filename]VertexNormals;</p>
-      <p>float* texCoords = [filename]TexCoords;</p>
-      <p>int vertexCount = [filename]VertexCount;</p>
-      <p>int* indexes = [filename]Indexes;</p>
-      <p>unsigned int indexCount = [filename]indexCount;</p>
-
-      <p style="color: red">float* colors is not included.</p>
+      <p>Output variables:</p>
+      <p>int [filename]VertexCount;</p>
+      <p>float* [filename]Vertices;</p>
+      <p>float* [filename]VertexNormals;</p>
+      <p>float* [filename]TexCoords;</p>
+      <br />
+      <p>Use with glDrawArrays</p>
     </div>
   </body>
 </html>

@@ -2,6 +2,7 @@ let current_blob = "";
 
 const button = document.querySelector("#button");
 const saveButton = document.querySelector("#saveButton");
+const statusSpan = document.querySelector("#status");
 
 const pickerOpts = {
   types: [
@@ -19,7 +20,7 @@ const pickerOpts = {
 async function getTheFile() {
   // open file picker
   [fileHandle] = await window.showOpenFilePicker(pickerOpts);
-
+  statusSpan.innerText = "wait";
   // get file contents
   const fileData = await fileHandle.getFile();
   const text = await fileData.text();
@@ -49,6 +50,7 @@ const parse = (text, name) => {
   const texValues = getTex(text);
   const normalValues = getVertexNormals(text);
   const faces = getFaces(text, name, texValues, normalValues, verts);
+  statusSpan.innerText = "ready";
   current_blob = faces;
 };
 
